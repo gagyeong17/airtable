@@ -1,23 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const baseURL = "https://api.airtable.com/v0/appZpl45YC9WO43Ll/Table%201 "
+  const options = {
+    headers: {
+      Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_KEY}`,
+      "Content-Type": "application/json",
+    },
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     에어테이블해볼꼬야
     </div>
   );
 }
