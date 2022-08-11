@@ -56,6 +56,7 @@ function App() {
     const updatedTodo = produce(todo, (nextTodo) => {
       nextTodo.fields.Done = !todo.fields.Done;
     });
+
     await axios.patch(
       `${baseURL}/${todo.id}`,
       {
@@ -68,8 +69,14 @@ function App() {
 
 
   const remove = async (todo)  => {
-    await axios.delete(`${baseURL}/${todo.id}`, options);
-    const newTodos = todos.filter((item) => todo.id !== item.id);
+    // todos.map((item, idx) => {
+    //   return(
+    //     console.log(item.id)
+    //   )
+    //  })
+    console.log(todos.id)
+    await axios.delete(`${baseURL}/${todos.id}`, options);
+    const newTodos = todos.filter((item) => todos.id !== item.id);
     setTodos(newTodos);
   };
  
@@ -79,15 +86,15 @@ function App() {
       {loading ? (
         <div>Loading</div>
       ) : (
-          <div className="App" style={{border: '1px solid blue', width: '400px', height:'300px', margin: '50px auto',  }}>
-          {/* <button onClick={get}>불러오기</button> */}
+          <div className="App" style={{border: '1px solid blue', width: '300px', height:'300px', margin: 'auto', }}>
+          <button onClick={get}>불러오기</button>
       {todos?.map((item,idx)=>{
         return (
           <div key={idx} style={{display:'flex', flexDirection:'row', justifyContent: 'center'}}>
-            <div style={{border: '1px solid green', width: '150px',}}>{item.fields.Name}</div>
-            <div style={{border: '1px solid blue', width: '150px',}}>{item.fields.Label}</div>
-            <button onClick={()=>{remove(item)}}>삭제</button> 
-            <button onClick={()=>{update(item)}}>수정</button>
+            <div style={{border: '1px solid red', width: '100px',}}>{item.fields.Name}</div>
+            <div style={{border: '1px solid blue', width: '100px',}}>{item.fields.Label}</div>
+            <button onClick={remove}>삭제</button> 
+            <button onClick={update}>수정</button>
           </div>
           
         )
