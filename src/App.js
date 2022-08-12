@@ -17,8 +17,9 @@ function App() {
   const [label, setLabel] = useState('')
   const [todos, setTodos] = useState('')
   const [loading, setLoading] = useState(true);
+  // const [edit, setEdit] = useState(false)
 
-  const create = () => {
+  const create = (e) => {
     const newTodo = {
       fields: {
         Name: name,
@@ -33,11 +34,10 @@ function App() {
         options
       );
       get()
+      e.target.value =""
   };
 
-  const onKeyDown = (e)=> {
-    if (e.key === "Enter") create();
-  };
+
 
   const get = useCallback(async () => {
     const response = await axios.get(baseURL, options);
@@ -54,7 +54,10 @@ function App() {
 
   const update = async (todo) => {
     const updatedTodo = produce(todo, (nextTodo) => {
+      // nextTodo.fields.Name = !todo.fields.Name;
+      // nextTodo.fields.Label = !todo.fields.Label;
       nextTodo.fields.Done = !todo.fields.Done;
+      // console.log(Done)
     });
     await axios.patch(
       `${baseURL}/${todo.id}`,
@@ -64,8 +67,17 @@ function App() {
       options
     );
     get();
+    
   };
 
+  // const updateMoment = (todo) => {
+  //   produce(todo, (nextTodo) => {
+  //     // nextTodo.fields.Name = !todo.fields.Name;
+  //     // nextTodo.fields.Label = !todo.fields.Label;
+  //     nextTodo.fields.Done = !todo.fields.Done;
+  //   });
+  //   // setEdit(true)
+  // }
 
   const remove = async (todo)  => {
     await axios.delete(`${baseURL}/${todo.id}`, options);
@@ -73,29 +85,39 @@ function App() {
     setTodos(newTodos);
   };
  
-
+console.log(todos)
   return (
   <>
       {loading ? (
         <div>Loading</div>
       ) : (
-          <div className="App" style={{border: '1px solid blue', width: '400px', height:'300px', margin: '50px auto',  }}>
+          <div className="App" style={{border: '1px solid blue', width: '500px', height:'300px', margin: '50px auto',  }}>
           {/* <button onClick={get}>불러오기</button> */}
       {todos?.map((item,idx)=>{
         return (
-          <div key={idx} style={{display:'flex', flexDirection:'row', justifyContent: 'center'}}>
-            <div style={{border: '1px solid green', width: '150px',}}>{item.fields.Name}</div>
+          <div key={idx} style={{display:'flex', flexDirection:'row', justifyContent: 'center'}}>                 
+            {item.fields.Done ? (<>
+            <div style={{border: '1px solid green', width: '150px', backgroundColor: 'red'}}>{item.fields.Name}</div>
+            <div style={{border: '1px solid blue', width: '150px',backgroundColor: 'red'}}>{item.fields.Label}</div>
+            <button onClick={()=>{remove(item)}}>삭제</button> 
+            <button onClick={()=>{update(item)}}>아직</button>
+            </>) : (<>
+              <div style={{border: '1px solid green', width: '150px',}}>{item.fields.Name}</div>
             <div style={{border: '1px solid blue', width: '150px',}}>{item.fields.Label}</div>
             <button onClick={()=>{remove(item)}}>삭제</button> 
-            <button onClick={()=>{update(item)}}>수정</button>
+            <button onClick={()=>{update(item)}}>완료</button>
+            </>)}
+            
+          
+            
           </div>
           
         )
       })}
       <hr/>
-      <div style={{display: 'flex', flexDirection:'column', }}>
-        <input placeholder='Name' onChange={(e) => {setName(e.target.value)}} onKeyDown={onKeyDown}/>
-        <input placeholder='Label' onChange={(e) => {setLabel(e.target.value)}} onKeyDown={onKeyDown}/>
+      <div style={{display: 'flex', flexDirection:'column',  width: '400px', margin: 'auto', }}>
+        <input placeholder='Name' onChange={(e) => {setName(e.target.value)}} />
+        <input placeholder='Label' onChange={(e) => {setLabel(e.target.value)}} />
         <button onClick={create}>입력하기</button>
       </div>
       
